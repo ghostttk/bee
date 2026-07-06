@@ -57,13 +57,14 @@
         } else { document.getElementById('err1').style.display = 'block'; }
     }
 
-    function checkStep2() {
+        function checkStep2() {
         const ans = document.getElementById('ans2').value.trim().toLowerCase();
-        if (ans.includes("olhos") || ans.includes("seus olhos")) {
+        if (ans.includes("olhos") || ans.includes("seus olhos") || ans.includes("beatriz")) {
             document.getElementById('step2').classList.remove('active');
             document.getElementById('stepFinal').classList.add('active');
         } else { document.getElementById('err2').style.display = 'block'; }
     }
+
 
     function showHint() { document.getElementById('hintImg').style.display = 'block'; }
 
