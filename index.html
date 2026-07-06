@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para a Bia 🦭</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b1a30; /* Fundo Azul Escuro */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Canvas dos corações caindo */
+        #heartCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Garante que os cliques passem pelos corações e cheguem nos botões */
+            z-index: 1;
+        }
+
+        .container {
+            background-color: #162a45; /* Card em tom azul combinado */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 123, 255, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid #23416b;
+            position: relative;
+            z-index: 2; /* Fica por cima do canvas para conseguir digitar */
+        }
+
+        h2 {
+            color: #38ef7d; /* Mudei para uma cor de destaque bacana */
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #2d5180;
+            background-color: #0b1a30;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff; /* Botão Azul */
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .step {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .error {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .final-card {
+            font-size: 26px;
+            font-weight: bold;
+            color: #ff4b5c; /* "Te amo" em vermelho/rosa de destaque */
+            animation: heartbeat 1.2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.05); }
+            40% { transform: scale(1); }
+            60% { transform: scale(1.05); }
+            80% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="heartCanvas"></canvas>
+
+<div class="container">
+    <!-- Pergunta 1 -->
+    <div id="step1" class="step active">
+        <h2>Pergunta 1</h2>
+        <p>Qual é a data do meu aniversário?</p>
+        <input type="date" id="ans1">
+        <button onclick="checkStep1()">Próxima</button>
+        <p id="err1" class="error">Data incorreta! Tente de novo. 👀</p>
+    </div>
+
+    <!-- Pergunta 2 -->
+    <div id="step2" class="step">
+        <h2>Pergunta 2</h2>
+        <p>Qual é a minha cor favorita?</p>
+        <input type="text" id="ans2" placeholder="Digite a cor aqui...">
+        <button onclick="checkStep2()">Verificar</button>
+        <p id="err2" class="error">Hum... não é essa cor. Tente outra! 🎨</p>
+    </div>
+
+    <!-- Tela Final -->
+    <div id="stepFinal" class="step">
+        <div class="final-card">
+            <p>Você acertou tudo! 🖤</p>
+            <p>Te amo, Bia.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- LÓGICA DO JOGO ---
+    function checkStep1() {
+        const inputDate = document.getElementById('ans1').value;
+        if (inputDate === "2012-05-20") {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        } else {
+            document.getElementById('err1').style.display = 'block';
+        }
+    }
+
+    function checkStep2() {
+        const inputColor = document.getElementById('ans2').value.trim().toLowerCase();
+        
+        // Troque "preto" pela sua cor real se for necessário!
+        if (inputColor === "preto" || inputColor === "azul") { 
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('stepFinal').classList.add('active');
+        } else {
+            document.getElementById('err2').style.display = 'block';
+        }
+    }
+
+    // --- LÓGICA DO CANVAS (CORAÇÕES CAINDO) ---
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const hearts = [];
+    const heartColors = ['#ff4b5c', '#ff6b8b', '#ff8da1', '#ffb3c1'];
+
+    class Heart {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * -canvas.height - 20;
+            this.size = Math.random() * 10 + 8;
+            this.speed = Math.random() * 2 + 1;
+            this.opacity = Math.random() * 0.5 + 0.5;
+            this.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+            this.swing = Math.random() * 0.05;
+            this.swingSpeed = Math.random() * 0.02;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.opacity;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            
+            // Desenha a forma do coração usando curvas bezier
+            const topCurveHeight = this.size * 0.3;
+            ctx.moveTo(this.x, this.y + topCurveHeight);
+            
+            // Lado esquerdo do coração
+            ctx.bezierCurveTo(
+                this.x - this.size / 2, this.y, 
+                this.x - this.size, this.y + topCurveHeight, 
+                this.x, this.y + this.size
+            );
+            
+            // Lado direito do coração
+            ctx.bezierCurveTo(
+                this.x + this.size, this.y + topCurveHeight, 
+                this.x + this.size / 2, this.y, 
+                this.x, this.y + topCurveHeight
+            );
+            
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        update() {
+            this.y += this.speed;
+            this.x += Math.sin(this.y * this.swingSpeed) * 0.5; // Faz o coração balançar levemente pros lados
+
+            // Se passar do fim da tela, volta para o topo
+            if (this.y > canvas.height) {
+                this.y = -20;
+                this.x = Math.random() * canvas.width;
+            }
+        }
+    }
+
+    // Inicializa a lista de corações
+    for (let i = 0; i < 40; i++) {
+        hearts.push(new Heart());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        hearts.forEach(heart => {
+            heart.update();
+            heart.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
+
+</body>
+</html>
