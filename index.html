@@ -114,7 +114,7 @@
 
     function checkStep4() {
         const ans = document.getElementById('ans4').value.trim().toLowerCase();
-        if (ans.includes("link do zap") || ans.includes("linkdozap") || ans.includes("zap")) {
+        if (ans.includes("link do zap") || ans.includes("linkdozap") || ans.includes("zap") ans.includes("link")) {
             document.getElementById('step4').classList.remove('active');
             document.getElementById('stepFinal').classList.add('active');
         } else { document.getElementById('err4').style.display = 'block'; }
