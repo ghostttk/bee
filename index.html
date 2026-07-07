@@ -17,7 +17,7 @@
         #hintImg { width: 100%; margin-top: 15px; border-radius: 10px; display: none; }
         .final-card { font-size: 24px; font-weight: bold; color: #ff9a9e; animation: heartbeat 1.2s infinite; display: block; }
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        
+         
         #spotifyEmbed { transition: height 0.5s ease; margin-bottom: 15px; display: block; }
         .welcome-foca { font-size: 50px; margin-bottom: 10px; animation: heartbeat 2s infinite; }
     </style>
@@ -28,7 +28,8 @@
 
 <div class="container">
 
-<iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/113H60MMmOfOagBCeohEQa?utm_source=generator&si=020b4b3ec0ee4ef5" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <!-- COLOQUEI O id="spotifyEmbed" AQUI PARA O BOTÃO FUNCIONAR -->
+    <iframe id="spotifyEmbed" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/113H60MMmOfOagBCeohEQa?utm_source=generator&si=020b4b3ec0ee4ef5" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 
     <div id="step0" class="step active">
         <div class="welcome-foca">🦭</div>
@@ -115,6 +116,11 @@
             document.getElementById('step4').classList.remove('active');
             document.getElementById('stepFinal').classList.add('active');
         } else { document.getElementById('err4').style.display = 'block'; }
+    }
+
+    // ADICIONEI DE VOLTA ESSA FUNÇÃO QUE TINHA SUMIDO DO SEU CÓDIGO
+    function showHint() { 
+        document.getElementById('hintImg').style.display = 'block'; 
     }
 
     // --- CANVAS EMOJI CORAÇÃO ---
